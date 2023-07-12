@@ -1,0 +1,162 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://github.com/AryanshMahato/lb4-rest-connector-schema/schema.json",
+  "title": "RestConnector",
+  "type": "object",
+  "definitions": {
+    "supported-connectors": {
+      "type": "string",
+      "anyOf": [
+        {
+          "const": "rest"
+        }
+      ]
+    },
+    "content-format": {
+      "type": "string",
+      "anyOf": [
+        {
+          "const": "application/json"
+        },
+        {
+          "const": "application/x-www-form-urlencoded"
+        },
+        {
+          "const": "text/html"
+        }
+      ]
+    },
+    "http-method": {
+      "type": "string",
+      "description": "HTTP method of the API call",
+      "anyOf": [
+        {
+          "const": "GET"
+        },
+        {
+          "const": "POST"
+        },
+        {
+          "const": "PUT"
+        },
+        {
+          "const": "PATCH"
+        },
+        {
+          "const": "DELETE"
+        }
+      ]
+    },
+    "headers": {
+      "type": "object",
+      "description": "Headers to be sent in request",
+      "properties": {
+        "content-type": {
+          "type": "string",
+          "description": "Content-Type of the request",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/content-format"
+            }
+          ]
+        },
+        "accept": {
+          "type": "string",
+          "description": "Accept header of the request",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/content-format"
+            }
+          ]
+        },
+        "Authorization": {
+          "type": "string",
+          "description": "Authorization header of the request"
+        }
+      }
+    }
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the connecting service"
+    },
+    "connector": {
+      "type": "string",
+      "description": "Type of the connector to be used",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/supported-connectors"
+        }
+      ]
+    },
+    "baseURL": {
+      "type": "string",
+      "description": "Base URL of the connecting service"
+    },
+    "crud": {
+      "type": "boolean",
+      "title": "boolean",
+      "description": "Whether to expose CRUD endpoints for the connecting service"
+    },
+    "options": {
+      "type": "object",
+      "title": "Options",
+      "description": "Options to configure the connector",
+      "properties": {
+        "baseUrl": {
+          "type": "string",
+          "description": "Base URL of the connecting service"
+        },
+        "headers": {
+          "$ref": "#/definitions/headers"
+        }
+      }
+    },
+    "operations": {
+      "title": "Operations",
+      "description": "Operations to be exposed for the connecting service",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "template": {
+            "type": "object",
+            "description": "Template of the API call",
+            "properties": {
+              "method": {
+                "$ref": "#/definitions/http-method"
+              },
+              "url": {
+                "type": "string",
+                "description": "Path for the API call"
+              },
+              "headers": {
+                "$ref": "#/definitions/headers"
+              },
+              "body": {
+                "type": [
+                  "string",
+                  "object"
+                ],
+                "description": "Body of the API call, can be a string or an object, use {body} for dynamic values"
+              }
+            }
+          },
+          "functions": {
+            "title": "Functions to be exposed",
+            "type": "object",
+            "patternProperties": {
+              ".*": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
