@@ -140,6 +140,13 @@
                   "object"
                 ],
                 "description": "Body of the API call, can be a string or an object, use {body} for dynamic values"
+              },
+              "query": {
+                "type": [
+                  "string",
+                  "object"
+                ],
+                "description": "Query of the API call, can be a string or an object"
               }
             }
           },
